@@ -1,0 +1,30 @@
+{
+    "name": "hanxiaoqingcheng/warning",
+    "type": "project",
+    "description": "Warning Tools",
+    "keywords": [
+        "warning"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "shuying",
+            "email": "shuying@think-land.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.3.0"
+    },
+    "autoload" : {
+        "psr-4":{
+            "Sy\\Warning\\":"src/"
+        }
+    },
+    "extra" : {
+        "laravel" : {
+            "providers" : [
+                "Sy\\Warning\\WarningServiceProvider"
+            ]
+        }
+    }
+}

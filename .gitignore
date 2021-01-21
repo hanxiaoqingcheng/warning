@@ -1,0 +1,14 @@
+# Laravel Files
+#-------------------------
+/vendor
+
+.phpunit.result.cache
+.env
+.env.local
+
+
+
+# IDE Files
+#-------------------------
+/nbproject/
+.idea
