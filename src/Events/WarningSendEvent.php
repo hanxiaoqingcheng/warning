@@ -2,11 +2,11 @@
 
 namespace Sy\Warning\Events;
 
-use App\Jobs\SendDing;
-use App\Jobs\SendMail;
-use App\Jobs\SendSMS;
-use App\Jobs\SendWebhook;
-use App\Jobs\SendWeixin;
+use Sy\Warning\Jobs\SendDing;
+use Sy\Warning\Jobs\SendMail;
+use Sy\Warning\Jobs\SendSMS;
+use Sy\Warning\Jobs\SendWebhook;
+use Sy\Warning\Jobs\SendWeixin;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
