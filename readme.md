@@ -26,7 +26,7 @@ php artisan migrate
 ```
 
 ### 短信发送
-本扩展使用的是聚合数据的短信发送功能，申请账号查看官网[聚合数据短信发送](https://www.juhe.cn/docs/api/id/54)
+本扩展使用的是聚合数据的短信发送功能，warning.php文件下的SMSKey和SMSTpl需要到聚合官网[聚合数据短信发送](https://www.juhe.cn/docs/api/id/54)申请
 
 
 ### 开启用户发送短信、邮件、钉钉机器人、webhook、微信企业机器人
