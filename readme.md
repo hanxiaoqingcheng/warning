@@ -6,7 +6,7 @@
 
 ### 安装依赖
 ```bash
-composer install hanxiaoqingcheng/warning
+composer require hanxiaoqingcheng/warning
 ```
 
 ### 自动生成文件
