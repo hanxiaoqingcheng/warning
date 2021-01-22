@@ -28,19 +28,19 @@ class WarningSendEvent
         foreach ($warning as $user) {
             if ($user->show == 1) {
                 if ($user->type == 'email') {
-                    SendMail::dispatch($user->account, $params, $user->uname);
+                    SendMail::dispatch($user->account, $params, $user->uname)->onConnection('redis');
                 }
                 if ($user->type == 'phone') {
-                    SendSMS::dispatch($user->account, $params, $user->uname);
+                    SendSMS::dispatch($user->account, $params, $user->uname)->onConnection('redis');
                 }
                 if ($user->type == 'ding') {
-                    SendDing::dispatch($user->account, $params, $user->uname);
+                    SendDing::dispatch($user->account, $params, $user->uname)->onConnection('redis');
                 }
                 if ($user->type == 'webhook') {
-                    SendWebhook::dispatch($user->account, $params, $user->uname);
+                    SendWebhook::dispatch($user->account, $params, $user->uname)->onConnection('redis');
                 }
                 if ($user->type == 'weixin') {
-                    SendWeixin::dispatch($user->account, $params, $user->uname);
+                    SendWeixin::dispatch($user->account, $params, $user->uname)->onConnection('redis');
                 }
             }
         }

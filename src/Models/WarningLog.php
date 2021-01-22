@@ -1,6 +1,6 @@
 <?php
 
-namespace Sy\Warning\Model;
+namespace Sy\Warning\Models;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;

@@ -2,12 +2,11 @@
 
 namespace Sy\Warning;
 
-use App\Models\Warning\WarningLog;
-use App\Models\Warning\WarningUserSet;
-use App\Repositories\Repository;
+use Sy\Warning\Models\WarningLog;
+use Sy\Warning\Models\WarningUserSet;
 use Exception;
 
-class WarningRepository extends Repository
+class WarningRepository
 {
     /**
      * 插入用户预警地址,账号+",1"表示显示，0表示不显示
