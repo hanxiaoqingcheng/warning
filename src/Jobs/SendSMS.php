@@ -27,7 +27,6 @@ class SendSMS extends BaseJob
      */
     private function sendSmsCode()
     {
-        dd(config("warning.WARNING_TYPE.PHONE"));
         $smsurl = 'https://v.juhe.cn/sms/send?key='.config('warning.SMSKey').'&mobile=' . $this->account . '&tpl_id='.config('warning.SMSTpl').'&tpl_value=' . urlencode($this->message);
 
         $params = $this->warningLog(config("warning.WARNING_TYPE.PHONE"));
