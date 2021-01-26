@@ -44,8 +44,8 @@ class WarningSendListener
                 $log[] = [
                     'uid' => isset($c['user_id']) ? $c['user_id'] : '',
                     'name' => isset($c['uname']) ? $c['uname'] : '',
-                    'product' => isset($c['type']) ? $c['type'] : '',
-                    'warning_name' => '',
+                    'product' => isset($c['product']) ? $c['product'] : '',
+                    'warning_name' => isset($c['warning_name']) ? $c['warning_name'] : '',
                     'occur_time' => isset($c['occur_time']) ? $c['occur_time'] : date('Y-m-d H:i:s'),
                     'type' => $c['way'],
                     'message' => $c['message'],

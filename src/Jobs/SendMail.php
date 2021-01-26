@@ -16,7 +16,7 @@ class SendMail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $params;
+    public $content;
 
     public $account;
 
@@ -24,15 +24,12 @@ class SendMail implements ShouldQueue
      * Create a new job instance.
      *
      * @return void
-     * @param mixed $account
-     * @param mixed $params
-     * @param mixed $uname
+     * @param array $accountAndTpl
      */
-    public function __construct($account, $params, $uname)
+    public function __construct($accountAndTpl)
     {
-        $this->params = $params;
-        $this->params->uname = $uname;
-        $this->account = $account;
+        $this->content = $accountAndTpl['content'];
+        $this->account = $accountAndTpl['account'];
     }
 
     /**
@@ -44,7 +41,7 @@ class SendMail implements ShouldQueue
     {
         $params = $this->params;
         $params->way = 'mail';
-        $params->message = "count=".$params->count."&keywords=".$params->keyword;
+        $params->message = $this->content;
         $params->times = 1;
         $params->occur_time = date('Y-m-d H:i:s');
         $params->account = $this->account;

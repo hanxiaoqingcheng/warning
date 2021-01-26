@@ -5,6 +5,7 @@ namespace Sy\Warning;
 use Sy\Warning\Models\WarningLog;
 use Sy\Warning\Models\WarningUserSet;
 use Exception;
+use Sy\Warning\Models\WarningTpl;
 
 class WarningRepository
 {
@@ -64,16 +65,41 @@ class WarningRepository
     }
 
     /**
-     * 根据用户id获取设置的账号
+     * 根据用户id获取全部设置的账号
+     *
+     * uname的作用，可以把id当成用户组，用户组下面有不同的负责人，设置不同的账号，发送不同的模板
      * @param $uid
      * @return mixed
      */
-    public static function getUserAccount($uid)
+    public static function getUserAccount($uid, $uname = '')
     {
         return WarningUserSet::where('uid', $uid)
             ->select('type', 'account', 'show', 'uname')
+            ->when($uname, function ($item) use ($uname) {
+                $item->where('uname', $uname);
+            })
             ->get();
     }
+
+    /**
+     * 获取用户发送账号
+     *
+     * uname的作用，可以把id当成用户组，用户组下面有不同的负责人，设置不同的账号，发送不同的模板
+     *
+     * @param $uid
+     * @param string $uname
+     * @return mixed
+     */
+    public static function getShowAccount($uid, $uname = '')
+    {
+        return WarningUserSet::where('uid', $uid)
+            ->when($uname, function ($item) use ($uname) {
+                $item->where('uname', $uname);
+            })
+            ->where('show',1)
+            ->pluck('account','type');
+    }
+
 
     /**
      * 修改账号显示和不显示(1,显示，-1不显示)
@@ -108,5 +134,27 @@ class WarningRepository
         } catch (Exception $e) {
             msgExport(1002);
         }
+    }
+
+    /**
+     * 根据用户名和产品获取需要发送的模板
+     *
+     * @param $uid
+     * @param $product
+     * @param string $uname
+     * @return mixed
+     */
+    public static function getWarningTpl($uid, $product,$uname = '',$warningName = '')
+    {
+        return WarningTpl::where('show', 1)
+            ->where('uid', $uid)
+            ->where('product', $product)
+            ->when($uname, function ($item) use ($uname){
+                $item->where('uname', $uname);
+            })
+            ->when($warningName, function ($item) use ($warningName) {
+                $item->where('warning_name', $warningName);
+            })
+            ->pluck('warning_tpl','type');
     }
 }

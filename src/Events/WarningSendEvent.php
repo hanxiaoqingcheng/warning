@@ -23,27 +23,26 @@ class WarningSendEvent
      * @param mixed $warning
      * @param mixed $params
      */
-    public function __construct($warning, $params)
+    public function __construct($warning,$event)
     {
-        foreach ($warning as $user) {
-            if ($user->show == 1) {
-                if ($user->type == 'email') {
-                    SendMail::dispatch($user->account, $params, $user->uname)->onConnection('redis');
-                }
-                if ($user->type == 'phone') {
-                    SendSMS::dispatch($user->account, $params, $user->uname)->onConnection('redis');
-                }
-                if ($user->type == 'ding') {
-                    SendDing::dispatch($user->account, $params, $user->uname)->onConnection('redis');
-                }
-                if ($user->type == 'webhook') {
-                    SendWebhook::dispatch($user->account, $params, $user->uname)->onConnection('redis');
-                }
-                if ($user->type == 'weixin') {
-                    SendWeixin::dispatch($user->account, $params, $user->uname)->onConnection('redis');
-                }
+        foreach ($warning as $type=>$tplAndAccount) {
+            // if ($type == 'email') {
+            //     SendMail::dispatch($tplAndAccount,$event);
+            // }
+            // if ($type == 'phone') {
+            //     SendSMS::dispatch($tplAndAccount,$event);
+            // }
+            // if ($type == 'ding') {
+            //     SendDing::dispatch($tplAndAccount,$event);
+            // }
+            if ($type == 'webhook') {
+                SendWebhook::dispatch($tplAndAccount,$event);
             }
+            // if ($type == 'weixin') {
+            //     SendWeixin::dispatch($tplAndAccount,$event);
+            // }
         }
+
     }
 
     /**

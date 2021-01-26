@@ -2,37 +2,10 @@
 
 namespace Sy\Warning\Jobs;
 
-use Exception;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
-class SendDing implements ShouldQueue
+class SendDing extends BaseJob
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
-    public $params;
-
-    public $account;
-
-    /**
-     * Create a new job instance.
-     *
-     * @return void
-     * @param mixed $account
-     * @param mixed $params
-     * @param mixed $uname
-     */
-    public function __construct($account, $params, $uname)
-    {
-        $this->params = $params;
-        $this->params->uname = $uname;
-        $this->account = $account;
-    }
 
     /**
      * Execute the job.
@@ -41,7 +14,7 @@ class SendDing implements ShouldQueue
      */
     public function handle()
     {
-        $this->sendDing($this->account, $this->params);
+        $this->sendDing();
     }
 
     /**
@@ -49,54 +22,28 @@ class SendDing implements ShouldQueue
      * @param $ding
      * @param $params
      */
-    private function sendDing($ding, $params)
+    private function sendDing()
     {
-        $params->way = 'ding';
-        $params->message = 'count='.$params->count.'&keywords='.$params->keyword;
-        $params->account = $ding;
-        $params->times = 1;
-        $params->occur_time = date('Y-m-d H:i:s');
-
-        if ($params->type == 1) {
-            $content = '您扫描的关键字「'.$params->keyword.'」，有 ' . $params->count . ' 个新增未知风险待确认，请您前往 https://scan.juhe.cn/ 查看。';
-        } else {
-            $content = '您监控的关键字「'.$params->keyword.'」，有 ' . $params->count . ' 个新增威胁情报，请您前往 https://scan.juhe.cn/ 查看。';
-        }
+        $params = $this->warningLog(config("warning.WARNING_TYPE.DING"));
 
         $postData = [
             'msgtype' => 'text',
             'text' => [
-                'content' => $content
+                'content' => $this->message
             ]
         ];
-        $content = Http::post($ding, $postData);
+        $content = Http::post($this->account, $postData);
         $result = $content->json();
-
         if ($result && isset($result['errcode'])) {
             $error_code = $result['errcode'];
             if ($error_code == 0) {
-                $params->status = 1;
+                $params['status'] = 1;
             } else {
-                $params->status = 0;
+                $params['status'] = 0;
             }
         } else {
-            $params->status = 0;
+            $params['status'] = 0;
         }
-        $data = json_decode(json_encode($params), 1);
-
-        try {
-            $dingCache[] = $data;
-            $cache = Cache::get('warning_log_ding');
-
-            if ($cache) {
-                $cache = json_decode($cache, 1);
-
-                $dingCache = array_merge($dingCache, $cache);
-            }
-
-            Cache::put('warning_log_ding', json_encode($dingCache));
-        } catch (Exception $e) {
-            msgExport(1002);
-        }
+        $this->saveCache($params,config("warning.WARNING_TYPE.DING"));
     }
 }

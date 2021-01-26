@@ -2,40 +2,10 @@
 
 namespace Sy\Warning\Jobs;
 
-use Exception;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
-class SendSMS implements ShouldQueue
+class SendSMS extends BaseJob
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
-    public $params;
-
-    public $account;
-
-    public $url = 'https://scan.juhe.cn/';
-
-    /**
-     * Create a new job instance.
-     *
-     * @return void
-     * @param mixed $account
-     * @param mixed $params
-     * @param mixed $uname
-     */
-    public function __construct($account, $params, $uname)
-    {
-        $this->params = $params;
-        $this->params->uname = $uname;
-        $this->account = $account;
-    }
-
     /**
      * Execute the job.
      *
@@ -43,7 +13,7 @@ class SendSMS implements ShouldQueue
      */
     public function handle()
     {
-        $this->sendSmsCode($this->account, $this->params);
+        $this->sendSmsCode();
     }
 
     /**
@@ -55,45 +25,28 @@ class SendSMS implements ShouldQueue
      * @param mixed $params
      * @return array|string
      */
-    private function sendSmsCode($mobile, $params)
+    private function sendSmsCode()
     {
-        $tplvalue = '#num#=' . $params->count."&#url#=$this->url";
-        $smsurl = 'https://v.juhe.cn/sms/send?key='.config('SMSKey').'&mobile=' . $mobile . '&tpl_id='.config('SMSTpl').'&tpl_value=' . urlencode($tplvalue);
+        dd(config("warning.WARNING_TYPE.PHONE"));
+        $smsurl = 'https://v.juhe.cn/sms/send?key='.config('warning.SMSKey').'&mobile=' . $this->account . '&tpl_id='.config('warning.SMSTpl').'&tpl_value=' . urlencode($this->message);
 
-        $params->way = 'phone';
-        $params->message = $tplvalue;
-        $params->account = $mobile;
-        $params->times = 1;
-        $params->occur_time = date('Y-m-d H:i:s');
-
+        $params = $this->warningLog(config("warning.WARNING_TYPE.PHONE"));
 
         $content = Http::get($smsurl);
         $result = $content->json();
+
         if ($result) {
             $error_code = $result['error_code'];
             if ($error_code == 0) {
-                $params->status = 1;
+                $params['status'] = 1;
             } else {
-                $params->status = 0;
+                $params['status'] = 0;
             }
         } else {
-            $params->status = 0;
+            $params['status'] = 0;
         }
 
-        $data = json_decode(json_encode($params), 1);
-        try {
-            $phoneCache[] = $data;
-            $cache = Cache::get('warning_log_phone');
+        $this->saveCache($params,config("warning.WARNING_TYPE.PHONE"));
 
-            if ($cache) {
-                $cache = json_decode($cache, 1);
-
-                $phoneCache = array_merge($phoneCache, $cache);
-            }
-
-            Cache::put('warning_log_phone', json_encode($phoneCache));
-        } catch (Exception $e) {
-            msgExport(1002);
-        }
     }
 }

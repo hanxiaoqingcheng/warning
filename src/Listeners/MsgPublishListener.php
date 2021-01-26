@@ -9,9 +9,8 @@ use Sy\Warning\WarningRepository;
 
 class MsgPublishListener
 {
-    public $connection = 'redis';
-
     public $events;
+
     /**
      * Create the event listener.
      *
@@ -30,13 +29,52 @@ class MsgPublishListener
      */
     public function handle(MsgPublishEvent $event)
     {
-        $uid = $event->msgEntity->user_id;
+        //查询数据库,获取需要发送的账号
+        $accountInfo = WarningRepository::getShowAccount($event->userId, $event->username);
 
-        //查询数据库
-        $accountInfo = WarningRepository::getUserAccount($uid);
+        $tpl = WarningRepository::getWarningTpl($event->userId, $event->product, $event->username, $event->warningName);
 
+        //处理需要发送的账户和模板的对应关系
         if ($accountInfo) {
-            $this->events->dispatch(new WarningSendEvent($accountInfo, $event->msgEntity));
+            foreach ($accountInfo as $type => $account) {
+                if (isset($tpl[$type])) {
+                    $sendData[$type] = [
+                        'account' => $account,
+                        'content' => $this->getContent($event->keyword,$tpl[$type]),
+                    ];
+                }
+                if($type == 'phone'){
+                    $sendData['phone'] = [
+                        'account' => $account,
+                        'content' => $event->keyword
+                    ];
+                }
+
+            }
+            if(isset($sendData)){
+                $this->events->dispatch(new WarningSendEvent($sendData,$event));
+            }
+
         }
+    }
+
+
+    /**
+     * 获取组装之后的预警内容
+     *
+     * @param $tplValue
+     * @param $tpl
+     * @return mixed
+     */
+    public function getContent($tplValue, $tpl)
+    {
+        $tplValueArray = explode('&', $tplValue);
+        foreach ($tplValueArray as $t) {
+            preg_match('/^(#.*?#)=([\s\S]*?)$/', $t, $vo);
+            if ($vo) {
+                $tpl = str_replace($vo[1], $vo[2], $tpl);
+            }
+        }
+        return $tpl;
     }
 }
