@@ -25,7 +25,7 @@ class WarningSendListener
     {
         //读缓存，并写入数据库
         $phoneCache = Cache::get('warning_log_phone');
-        $emailCache = Cache::get('warning_log_mail');
+        $emailCache = Cache::get('warning_log_email');
         $dingCache = Cache::get('warning_log_ding');
         $webhookCache = Cache::get('warning_log_webhook');
         $weixinCache = Cache::get('warning_log_weixin');
@@ -63,7 +63,7 @@ class WarningSendListener
 
             //清除缓存
             Cache::pull('warning_log_phone');
-            Cache::pull('warning_log_mail');
+            Cache::pull('warning_log_email');
             Cache::pull('warning_log_ding');
             Cache::pull('warning_log_webhook');
             Cache::pull('warning_log_weixin');

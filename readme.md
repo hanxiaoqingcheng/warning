@@ -36,6 +36,14 @@ php artisan migrate
 本扩展依赖laravel框架，并没有引入laravel已经存在的扩展。
 配置laravel框架下config目录下的mail.php，不了解的可以自行查看laravel官方文档
 
+### 调用
+创建的数据warning_tpls表，字段product => $product,uid => $uid,uname => $uname,warning_name=> $warningName,字段名对应的参数为下面调用示例的入参
 
+$tplValue字段规则：warning_tpls表中的warning_tpl字段，所有参数以#xxx#的形式，参数前后用#号。
+
+数据库warning_tpl字段模板示例：`您扫描的关键字「#keywords#」，有#num#个新增未知风险待确认，请您前往 #url# 查看。`
+$tplValue示例：`#keywords#=聚合数据&#num#=10&#url#=https://scan.juhe.cn`
+```php
+event(new Sy\Warning\Events\MsgPublishEvent($product, $tplValue, $uid, $username, $warningName));```
 
 

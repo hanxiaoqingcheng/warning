@@ -17,7 +17,8 @@ return [
     'SMSTpl' => '',
 
     //默认预警模板
-    'Warning_TPL' => '您扫描的关键字「#keyword#」，有#num#个新增未知风险待确认，请您前往#url#查看。'
+    'Warning_TPL' => '您扫描的关键字「#keyword#」，有#num#个新增未知风险待确认，请您前往#url#查看。',
 
-
+    //发送邮件主题
+    'WarningSUB' => ''
 ];

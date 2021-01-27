@@ -44,13 +44,6 @@ class WarningServiceProvider extends ServiceProvider
         ]);
         //注册数据库迁移，执行php artisan migrate会自动执行，不需要再导入到database/migrations目录
         $this->loadMigrationsFrom(__DIR__.'/../migrations');
-
-        //告知Laravel视图文件的位置，注册扩展包的视图
-        $this->loadViewsFrom(__DIR__.'/views', 'warning');
-        $this->publishes([
-            __DIR__.'/views' => resource_path('views/vendor/warning'),
-        ]);
-
     }
 
     /**
