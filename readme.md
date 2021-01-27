@@ -41,9 +41,10 @@ php artisan migrate
 
 $tplValue字段规则：warning_tpls表中的warning_tpl字段，所有参数以#xxx#的形式，参数前后用#号。
 
-数据库warning_tpl字段模板示例：`您扫描的关键字「#keywords#」，有#num#个新增未知风险待确认，请您前往 #url# 查看。`
+数据库warning_tpl字段模板示例：`您扫描的关键字「#keywords#」，有#num#个新增未知风险待确认，请您前往 #url# 查看。` 
 $tplValue示例：`#keywords#=聚合数据&#num#=10&#url#=https://scan.juhe.cn`
 ```php
-event(new Sy\Warning\Events\MsgPublishEvent($product, $tplValue, $uid, $username, $warningName));```
+event(new Sy\Warning\Events\MsgPublishEvent($product, $tplValue, $uid, $username, $warningName));
+```
 
 
