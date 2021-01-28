@@ -19,6 +19,7 @@ class CreateWarningTplsTable extends Migration
             $table->string('uname', 40)->default('')->comment('用户名')->index();
             $table->string('product', 255)->default('')->comment('产品');
             $table->string('warning_name', 255)->default('')->comment('故障名称');
+            $table->string('type', 20)->default('')->comment('预警发送渠道：支持email,phone,ding,weixin,webhook');
             $table->text('warning_tpl')->comment('预警信息模板');
             $table->tinyInteger('show')->default(1)->comment('是否展示，1显示，0不显示');
             $table->timestamps();
