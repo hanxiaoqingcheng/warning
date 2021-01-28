@@ -6,7 +6,7 @@
 
 ### 安装依赖
 ```bash
-composer install hanxiaoqingcheng/warning
+composer require hanxiaoqingcheng/warning
 ```
 
 ### 自动生成文件
@@ -24,6 +24,8 @@ php artisan cache:clear
 ```bash
 php artisan migrate
 ```
+需要配置数据库表：warning_user_account 和 warning_tpl
+
 
 ### 短信发送
 本扩展使用的是聚合数据的短信发送功能，申请账号查看官网[聚合数据短信发送](https://www.juhe.cn/docs/api/id/54)
@@ -41,8 +43,12 @@ php artisan migrate
 
 $tplValue字段规则：warning_tpls表中的warning_tpl字段，所有参数以#xxx#的形式，参数前后用#号。
 
-数据库warning_tpl字段模板示例：`您扫描的关键字「#keywords#」，有#num#个新增未知风险待确认，请您前往 #url# 查看。` 
+数据库warning_tpl字段模板如果是email,webhook,weixin,dingding,示例：`您扫描的关键字「#keywords#」，有#num#个新增未知风险待确认，请您前往 #url# 查看。` 
+
+如果是phone，按照聚合网站的要求，需要输入的参数tpl_value字段就可，示例：#code#=1234&#uname#=小明
+
 $tplValue示例：`#keywords#=聚合数据&#num#=10&#url#=https://scan.juhe.cn`
+
 ```php
 event(new Sy\Warning\Events\MsgPublishEvent($product, $tplValue, $uid, $username, $warningName));
 ```
