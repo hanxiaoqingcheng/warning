@@ -27,7 +27,7 @@ class MsgPublishEvent
      *
      * @return void
      */
-    public function __construct($product, $keyword,  $user_id, $username = '', $warning_name)
+    public function __construct($product, $keyword,  $user_id, $username = '', $warning_name = '')
     {
         $this->product = $product;
         $this->keyword = $keyword;

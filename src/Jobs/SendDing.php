@@ -44,6 +44,6 @@ class SendDing extends BaseJob
         } else {
             $params['status'] = 0;
         }
-        $this->saveCache($params,config("warning.WARNING_TYPE.DING"));
+        $this->saveCache($params, config("warning.WARNING_TYPE.DING"));
     }
 }

@@ -30,18 +30,18 @@ class WarningSendEvent
             if ($type == 'email') {
                 SendMail::dispatch($tplAndAccount,$event);
             }
-            // if ($type == 'phone') {
-            //     SendSMS::dispatch($tplAndAccount,$event);
-            // }
-            // if ($type == 'ding') {
-            //     SendDing::dispatch($tplAndAccount,$event);
-            // }
-            // if ($type == 'webhook') {
-            //     SendWebhook::dispatch($tplAndAccount,$event);
-            // }
-            // if ($type == 'weixin') {
-            //     SendWeixin::dispatch($tplAndAccount,$event);
-            // }
+            if ($type == 'phone') {
+                SendSMS::dispatch($tplAndAccount,$event);
+            }
+            if ($type == 'ding') {
+                SendDing::dispatch($tplAndAccount,$event);
+            }
+            if ($type == 'webhook') {
+                SendWebhook::dispatch($tplAndAccount,$event);
+            }
+            if ($type == 'weixin') {
+                SendWeixin::dispatch($tplAndAccount,$event);
+            }
         }
 
     }

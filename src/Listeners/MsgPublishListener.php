@@ -40,10 +40,22 @@ class MsgPublishListener
                 if (isset($tpl[$type])) {
                     $sendData[$type] = [
                         'account' => $account,
-                        'content' => $this->getContent($event->keyword,$tpl[$type]),
+                        'content' => $this->getContent($event->keyword, $tpl[$type]),
+                    ];
+                } else if (isset($tpl['default'])) {
+                    //可以配置默认模板
+                    $sendData[$type] = [
+                        'account' => $account,
+                        'content' => $this->getContent($event->keyword, $tpl['default']),
+                    ];
+                } else if (config('warning.Warning_TPL')) {
+                    //可以配置默认模板
+                    $sendData[$type] = [
+                        'account' => $account,
+                        'content' => $this->getContent($event->keyword, config('warning.Warning_TPL')),
                     ];
                 }
-                if($type == 'phone'){
+                if ($type == 'phone') {
                     $sendData['phone'] = [
                         'account' => $account,
                         'content' => $event->keyword
@@ -51,8 +63,8 @@ class MsgPublishListener
                 }
 
             }
-            if(isset($sendData)){
-                $this->events->dispatch(new WarningSendEvent($sendData,$event));
+            if (isset($sendData)) {
+                $this->events->dispatch(new WarningSendEvent($sendData, $event));
             }
 
         }
