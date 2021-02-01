@@ -27,13 +27,15 @@ php artisan migrate
 需要配置数据库表：warning_user_account 和 warning_tpls
 
 warning_user_account表配置示例：
+
 |uid|uname|type|account|show|
-| :-----| :-----| :-----| :-----|
+| :-----| :-----| :-----| :-----|:-----|
 |6|laowang|phone|13888888888|1|
 |6|用户名可不填（uid=6相当于用户组，不填写表示默认值）|phone|13999999999|1|
 |7|  |email|123@qq.com|1|
 
 warning_tpls表配置示例：
+
 |uid|uname|product|warning_name|type|warning_tpl|show|
 | :-----| :-----| :-----| :-----| :-----| :-----|:-----|
 |6|用户名，可不填，如6是某公司注册的账号，下面N个研发或者研发负责任，只需要配置不同uname|产品名称，必填|预警名称，可不填|预警类型：枚举,目前支持5种(email/phone/weixin/dingding/webhook)|1|
