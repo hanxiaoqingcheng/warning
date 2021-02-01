@@ -24,7 +24,19 @@ php artisan cache:clear
 ```bash
 php artisan migrate
 ```
-需要配置数据库表：warning_user_account 和 warning_tpl
+需要配置数据库表：warning_user_account 和 warning_tpls
+
+warning_user_account表配置示例：
+|uid|uname|type|account|show|
+| :-----| :-----| :-----| :-----|
+|6|laowang|phone|13888888888|1|
+|6|用户名可不填（uid=6相当于用户组，不填写表示默认值）|phone|13999999999|1|
+|7|  |email|123@qq.com|1|
+
+warning_tpls表配置示例：
+|uid|uname|product|warning_name|type|warning_tpl|show|
+| :-----| :-----| :-----| :-----| :-----| :-----|:-----|
+|6|用户名，可不填，如6是某公司注册的账号，下面N个研发或者研发负责任，只需要配置不同uname|产品名称，必填|预警名称，可不填|预警类型：枚举,目前支持5种(email/phone/weixin/dingding/webhook)|1|
 
 
 ### 短信发送
@@ -39,6 +51,7 @@ php artisan migrate
 配置laravel框架下config目录下的mail.php，不了解的可以自行查看laravel官方文档
 
 ### 调用
+
 创建的数据warning_tpls表，字段product => $product,uid => $uid,uname => $uname,warning_name=> $warningName,字段名对应的参数为下面调用示例的入参
 
 $tplValue字段规则：warning_tpls表中的warning_tpl字段，所有参数以#xxx#的形式，参数前后用#号。
@@ -50,7 +63,8 @@ $tplValue字段规则：warning_tpls表中的warning_tpl字段，所有参数以
 $tplValue示例：`#keywords#=聚合数据&#num#=10&#url#=https://scan.juhe.cn`
 
 ```php
+//$username可不传，表示给全部$uid成员发预警，若传$username，表示给$uid下面的$username传预警
+//$warningName可不传。传值表示根据该预警名称配置的预警模板发送预警
 event(new Sy\Warning\Events\MsgPublishEvent($product, $tplValue, $uid, $username, $warningName));
 ```
-
 
