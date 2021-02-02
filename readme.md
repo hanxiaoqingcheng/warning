@@ -38,8 +38,9 @@ warning_tpls表配置示例：
 
 |uid|uname|product|warning_name|type|warning_tpl|show|
 | :-----| :-----| :-----| :-----| :-----| :-----|:-----|
-|6|用户名，可不填，如6是某公司注册的账号，下面N个研发或者研发负责任，只需要配置不同uname|产品名称，必填|预警名称，可不填|预警类型：枚举,目前支持5种(email/phone/weixin/dingding/webhook)|您扫描的关键字「#keywords#」，有#num#个新增未知风险待确认，请您前往 #url# 查看。|1|
+|6|用户名，可不填，如6是某公司注册的账号，下面N个研发或者研发负责任，只需要配置不同uname|产品名称，必填|预警名称，可不填|预警类型：枚举,目前支持5种(email/phone/weixin/dingding/webhook),也可以填`default`|您扫描的关键字「#keywords#」，有#num#个新增未知风险待确认，请您前往 #url# 查看。|1|
 
+warning_tpls的type字段为default时，account表里面配置的账号，如果没有配置模板，则会走默认模板。
 
 ### 短信发送
 本扩展使用的是聚合数据的短信发送功能，申请账号查看官网[聚合数据短信发送](https://www.juhe.cn/docs/api/id/54)
