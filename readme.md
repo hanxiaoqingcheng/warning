@@ -68,6 +68,8 @@ $tplValue示例：`#keywords#=聚合数据&#num#=10&#url#=https://scan.juhe.cn`
 ```php
 //$username可不传，表示给全部$uid成员发预警，若传$username，表示给$uid下面的$username传预警
 //$warningName可不传。传值表示根据该预警名称配置的预警模板发送预警
-event(new Sy\Warning\Events\MsgPublishEvent($product, $tplValue, $uid, $username, $warningName));
+//除了tplValue为必传参数，其他都可以不传
+//$custom=1表示$tplValue为自定义的消息，不需要再去和warning_tpls表做匹配，直接发送
+event(new Sy\Warning\Events\MsgPublishEvent( $tplValue, $custom, $product, $uid, $username, $warningName));
 ```
 

@@ -32,8 +32,8 @@ class MsgPublishEvent
      */
     public function __construct(
         $keyword,
-        $product = 'default',
         $custom = 0,
+        $product = 'default',
         $user_id = 1,
         $username = '',
         $warning_name = ''
