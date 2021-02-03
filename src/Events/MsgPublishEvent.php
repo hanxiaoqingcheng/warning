@@ -32,7 +32,7 @@ class MsgPublishEvent
      */
     public function __construct(
         $keyword,
-        $custom = 0,
+        $custom = 1,
         $product = 'default',
         $user_id = 1,
         $username = '',
