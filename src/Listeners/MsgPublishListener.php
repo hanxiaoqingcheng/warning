@@ -42,42 +42,35 @@ class MsgPublishListener
                         'account' => $account,
                         'content' => $event->keyword
                     ];
-                } else {
-                    if (isset($tpl[$type])) {
-                        $sendData[$type] = [
-                            'account' => $account,
-                            'content' => $this->getContent($event->keyword, $tpl[$type]),
-                        ];
-                    } else {
-                        if (isset($tpl['default'])) {
-                            //可以配置默认模板
-                            $sendData[$type] = [
-                                'account' => $account,
-                                'content' => $this->getContent($event->keyword, $tpl['default']),
-                            ];
-                        } else {
-                            if (config('warning.Warning_TPL')) {
-                                //可以配置默认模板
-                                $sendData[$type] = [
-                                    'account' => $account,
-                                    'content' => $this->getContent($event->keyword, config('warning.Warning_TPL')),
-                                ];
-
-                            }
-
-                        }
-                    }
-                }
-                if ($type == 'phone') {
+                } else if ($type == 'phone') {
                     $sendData['phone'] = [
                         'account' => $account,
                         'content' => $event->keyword
                     ];
-                }
-                if (isset($sendData)) {
-                    $this->events->dispatch(new WarningSendEvent($sendData, $event));
+                } else if (isset($tpl[$type])) {
+                    $sendData[$type] = [
+                        'account' => $account,
+                        'content' => $this->getContent($event->keyword, $tpl[$type]),
+                    ];
+                } else if (isset($tpl['default'])) {
+                    //可以配置默认模板
+                    $sendData[$type] = [
+                        'account' => $account,
+                        'content' => $this->getContent($event->keyword, $tpl['default']),
+                    ];
+                } else if (config('warning.Warning_TPL')) {
+                    //可以配置默认模板
+                    $sendData[$type] = [
+                        'account' => $account,
+                        'content' => $this->getContent($event->keyword, config('warning.Warning_TPL')),
+                    ];
+
                 }
 
+            }
+
+            if (isset($sendData)) {
+                $this->events->dispatch(new WarningSendEvent($sendData, $event));
             }
         }
     }
