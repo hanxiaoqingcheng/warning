@@ -37,28 +37,34 @@ class MsgPublishListener
         //处理需要发送的账户和模板的对应关系
         if ($accountInfo) {
             foreach ($accountInfo as $type => $account) {
-                if (isset($tpl[$type])) {
+                if ($event->custom == 1) {
                     $sendData[$type] = [
                         'account' => $account,
-                        'content' => $event->custom == 1 ? $event->keyword : $this->getContent($event->keyword,
-                            $tpl[$type]),
+                        'content' => $event->keyword
                     ];
                 } else {
-                    if (isset($tpl['default'])) {
-                        //可以配置默认模板
+                    if (isset($tpl[$type])) {
                         $sendData[$type] = [
                             'account' => $account,
-                            'content' => $event->custom == 1 ? $event->keyword : $this->getContent($event->keyword,
-                                $tpl['default']),
+                            'content' => $this->getContent($event->keyword, $tpl[$type]),
                         ];
                     } else {
-                        if (config('warning.Warning_TPL')) {
+                        if (isset($tpl['default'])) {
                             //可以配置默认模板
                             $sendData[$type] = [
                                 'account' => $account,
-                                'content' => $event->custom == 1 ? $event->keyword : $this->getContent($event->keyword,
-                                    config('warning.Warning_TPL')),
+                                'content' => $this->getContent($event->keyword, $tpl['default']),
                             ];
+                        } else {
+                            if (config('warning.Warning_TPL')) {
+                                //可以配置默认模板
+                                $sendData[$type] = [
+                                    'account' => $account,
+                                    'content' => $this->getContent($event->keyword, config('warning.Warning_TPL')),
+                                ];
+
+                            }
+
                         }
                     }
                 }
@@ -68,12 +74,11 @@ class MsgPublishListener
                         'content' => $event->keyword
                     ];
                 }
+                if (isset($sendData)) {
+                    $this->events->dispatch(new WarningSendEvent($sendData, $event));
+                }
 
             }
-            if (isset($sendData)) {
-                $this->events->dispatch(new WarningSendEvent($sendData, $event));
-            }
-
         }
     }
 
@@ -85,8 +90,11 @@ class MsgPublishListener
      * @param $tpl
      * @return mixed
      */
-    public function getContent($tplValue, $tpl)
-    {
+    public
+    function getContent(
+        $tplValue,
+        $tpl
+    ) {
         $tplValueArray = explode('&', $tplValue);
         foreach ($tplValueArray as $t) {
             preg_match('/^(#.*?#)=([\s\S]*?)$/', $t, $vo);
