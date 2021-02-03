@@ -55,21 +55,28 @@ warning_tpls的type字段为default时，account表里面配置的账号，如�
 
 ### 调用
 
-创建的数据warning_tpls表，字段product => $product,uid => $uid,uname => $uname,warning_name=> $warningName,字段名对应的参数为下面调用示例的入参
-
-$tplValue字段规则：warning_tpls表中的warning_tpl字段，所有参数以#xxx#的形式，参数前后用#号。
-
-数据库warning_tpl字段模板如果是email,webhook,weixin,dingding,示例：`您扫描的关键字「#keywords#」，有#num#个新增未知风险待确认，请您前往 #url# 查看。` 
-
-如果是phone，按照聚合网站的要求，需要输入的参数tpl_value字段就可，示例：#code#=1234&#uname#=小明
-
-$tplValue示例：`#keywords#=聚合数据&#num#=10&#url#=https://scan.juhe.cn`
-
+#### 示例1
 ```php
-//$username可不传，表示给全部$uid成员发预警，若传$username，表示给$uid下面的$username传预警
-//$warningName可不传。传值表示根据该预警名称配置的预警模板发送预警
-//除了tplValue为必传参数，其他都可以不传
-//$custom=1表示$tplValue为自定义的消息，不需要再去和warning_tpls表做匹配，直接发送
+event(new Sy\Warning\Events\MsgPublishEvent( $tplValue));
+```
+示例1：无需配置模板表，默认uid=1,$tplValue为自定义的内容
+
+#### 示例2
+```php
 event(new Sy\Warning\Events\MsgPublishEvent( $tplValue, $custom, $product, $uid, $username, $warningName));
 ```
+示例2：需要按照一定的规则配置模板表
+
++ 创建的数据warning_tpls表，字段product => $product,uid => $uid,uname => $uname,warning_name=> $warningName,字段名对应的参数为下面调用示例的入参
+
++ $tplValue字段规则：warning_tpls表中的warning_tpl字段，所有参数以#xxx#的形式，参数前后用#号。
+
++ $tplValue示例：`#keywords#=聚合数据&#num#=10&#url#=https://scan.juhe.cn`
+
++ 数据库warning_tpl字段模板如果是email,webhook,weixin,dingding,示例：`您扫描的关键字「#keywords#」，有#num#个新增未知风险待确认，请您前往 #url# 查看。` 
+
++ 如果是phone，按照聚合网站的要求，需要输入的参数tpl_value字段就可，示例：#code#=1234&#uname#=小明
+
++ $custom=1表示为自定义模板，不需要与模板表匹配，直接发送$tplValue原文
+
 
