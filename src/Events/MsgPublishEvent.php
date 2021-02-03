@@ -21,19 +21,23 @@ class MsgPublishEvent
     //预警名称
     public $warningName;
 
+    //自定义模板,等于1表示$keyword字段为自定义内容，无需去模板库转换
+    public $custom;
+
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($product, $keyword,  $user_id, $username = '', $warning_name = '')
+    public function __construct($product, $keyword, $user_id, $username = '', $warning_name = '', $custom = 0)
     {
         $this->product = $product;
         $this->keyword = $keyword;
         $this->username = $username;
         $this->userId = $user_id;
         $this->warningName = $warning_name;
+        $this->custom = $custom;
     }
 
 

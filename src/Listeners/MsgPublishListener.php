@@ -40,20 +40,27 @@ class MsgPublishListener
                 if (isset($tpl[$type])) {
                     $sendData[$type] = [
                         'account' => $account,
-                        'content' => $this->getContent($event->keyword, $tpl[$type]),
+                        'content' => $event->custom == 1 ? $event->keyword : $this->getContent($event->keyword,
+                            $tpl[$type]),
                     ];
-                } else if (isset($tpl['default'])) {
-                    //可以配置默认模板
-                    $sendData[$type] = [
-                        'account' => $account,
-                        'content' => $this->getContent($event->keyword, $tpl['default']),
-                    ];
-                } else if (config('warning.Warning_TPL')) {
-                    //可以配置默认模板
-                    $sendData[$type] = [
-                        'account' => $account,
-                        'content' => $this->getContent($event->keyword, config('warning.Warning_TPL')),
-                    ];
+                } else {
+                    if (isset($tpl['default'])) {
+                        //可以配置默认模板
+                        $sendData[$type] = [
+                            'account' => $account,
+                            'content' => $event->custom == 1 ? $event->keyword : $this->getContent($event->keyword,
+                                $tpl['default']),
+                        ];
+                    } else {
+                        if (config('warning.Warning_TPL')) {
+                            //可以配置默认模板
+                            $sendData[$type] = [
+                                'account' => $account,
+                                'content' => $event->custom == 1 ? $event->keyword : $this->getContent($event->keyword,
+                                    config('warning.Warning_TPL')),
+                            ];
+                        }
+                    }
                 }
                 if ($type == 'phone') {
                     $sendData['phone'] = [
